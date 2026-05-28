@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RRHH en la Era de la IA — Diseño de Clase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A;
+    --navy-mid: #1A2F45;
+    --navy-light: #243B55;
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5EDD3;
+    --copper: #B05C3A;
+    --teal: #2A7C7C;
+    --teal-light: #3DA899;
+    --sage: #4A6741;
+    --sand: #F8F4EE;
+    --white: #FEFCF8;
+    --text-dark: #1A1A1A;
+    --text-mid: #3D3D3D;
+    --text-muted: #6B6B6B;
+    --border: rgba(201,168,76,0.2);
+    --border-strong: rgba(201,168,76,0.45);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    color: var(--text-dark);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* COVER */
+  .cover {
+    background: var(--navy);
+    color: var(--white);
+    padding: 80px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.1);
+  }
+  .cover-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .cover h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    max-width: 700px;
+  }
+  .cover h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+  .cover-subtitle {
+    font-size: 18px;
+    color: rgba(254,252,248,0.65);
+    max-width: 560px;
+    font-weight: 300;
+    margin-bottom: 48px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item { }
+  .cover-meta-item .label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .cover-meta-item .value {
+    font-size: 15px;
+    color: rgba(254,252,248,0.85);
+    font-weight: 300;
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--navy-mid);
+    padding: 0 60px;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav a {
+    color: rgba(254,252,248,0.55);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 18px 20px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav a:hover {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+  }
+  .nav a.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+  }
+
+  /* SECTIONS */
+  .section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 72px 40px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .section-number {
+    font-family: 'Fraunces', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: var(--gold-pale);
+    line-height: 1;
+    min-width: 60px;
+    margin-top: -8px;
+  }
+  .section-title-block { }
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--navy);
+  }
+  .section-desc {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-weight: 300;
+    max-width: 580px;
+  }
+
+  /* EVOLUTION TIMELINE */
+  .evolution-timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 48px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .evo-phase {
+    background: var(--white);
+    padding: 28px 24px;
+    position: relative;
+  }
+  .evo-phase.active { background: var(--navy); color: var(--white); }
+  .evo-era {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .evo-phase.active .evo-era { color: var(--gold-light); }
+  .evo-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 12px;
+    color: var(--navy);
+  }
+  .evo-phase.active .evo-title { color: var(--white); }
+  .evo-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .evo-phase.active .evo-desc { color: rgba(254,252,248,0.7); }
+  .evo-keywords {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .evo-keyword {
+    font-size: 11px;
+    background: var(--gold-pale);
+    color: var(--navy);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .evo-phase.active .evo-keyword {
+    background: rgba(201,168,76,0.2);
+    color: var(--gold-light);
+  }
+
+  /* TREND CARDS */
+  .trend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .trend-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .trend-icon {
+    width: 36px; height: 36px;
+    background: var(--gold-pale);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+  .trend-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .trend-def {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* SKILLS HUMAN */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 32px 0;
+  }
+  .skill-pill {
+    background: var(--navy);
+    color: var(--white);
+    padding: 16px 14px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .skill-pill.light {
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--navy);
+  }
+  .skill-pill-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .skill-pill-note {
+    font-size: 11px;
+    opacity: 0.65;
+    font-weight: 300;
+  }
+
+  /* FRAMEWORK */
+  .framework-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .framework-block-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .fw-source-badge {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: var(--navy);
+    color: var(--gold-light);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .fw-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--navy);
+  }
+  .fw-content {
+    font-size: 15px;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.75;
+  }
+  .fw-quote {
+    border-left: 3px solid var(--gold);
+    padding-left: 20px;
+    margin: 16px 0;
+    font-style: italic;
+    color: var(--text-muted);
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 300;
+  }
+  .fw-models {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .fw-model-tag {
+    font-size: 12px;
+    background: var(--gold-pale);
+    color: var(--navy);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* AGENDA */
+  .agenda-timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .agenda-timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1));
+  }
+  .agenda-block {
+    position: relative;
+    margin-bottom: 32px;
+  }
+  .agenda-block::before {
+    content: '';
+    position: absolute;
+    left: -26px; top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--sand);
+  }
+  .agenda-block.break::before { background: var(--text-muted); }
+  .agenda-block.highlight::before { background: var(--copper); width: 14px; height: 14px; left: -28px; top: 4px; }
+
+  .agenda-time {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .agenda-block.break .agenda-time { color: var(--text-muted); }
+  .agenda-item-title {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .agenda-item-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .agenda-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .agenda-meta-item {
+    font-size: 12px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--text-mid);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .agenda-block.highlight .agenda-item-title { color: var(--copper); }
+
+  /* DYNAMICS */
+  .dynamic-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .dynamic-header {
+    background: var(--navy);
+    padding: 24px 28px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .dynamic-num {
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.25);
+    line-height: 1;
+    min-width: 50px;
+  }
+  .dynamic-header-content { flex: 1; }
+  .dynamic-type {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .dynamic-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .dynamic-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .dynamic-chip {
+    font-size: 11px;
+    background: rgba(201,168,76,0.15);
+    color: var(--gold-light);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .dynamic-body {
+    padding: 28px;
+  }
+  .dynamic-obj {
+    font-size: 15px;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: var(--gold-pale);
+    border-radius: 8px;
+    border-left: 3px solid var(--gold);
+  }
+  .dynamic-step-list {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+  }
+  .dynamic-step {
+    counter-increment: step;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .dynamic-step::before {
+    content: counter(step);
+    min-width: 28px; height: 28px;
+    background: var(--navy);
+    color: var(--gold-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .dynamic-step-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  .dynamic-debrief {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-top: 20px;
+  }
+  .dynamic-debrief-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .dynamic-debrief ul {
+    list-style: none;
+    padding: 0;
+  }
+  .dynamic-debrief li {
+    font-size: 14px;
+    color: rgba(254,252,248,0.75);
+    font-weight: 300;
+    padding: 5px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+  .dynamic-debrief li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 12px;
+  }
+  .dynamic-learnings {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .dynamic-learning-tag {
+    font-size: 12px;
+    background: var(--gold-pale);
+    color: var(--navy);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* CASES */
+  .case-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .case-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .case-label.etico { background: #f0f4f8; color: var(--navy); }
+  .case-label.dilema { background: var(--gold-pale); color: #7a5a00; }
+  .case-label.debate { background: #f0f7f4; color: var(--teal); }
+  .case-label.real { background: #fdf2f0; color: var(--copper); }
+  .case-title {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .case-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  .case-questions {
+    margin-top: 14px;
+    padding-left: 16px;
+    border-left: 2px solid var(--gold-pale);
+  }
+  .case-questions p {
+    font-size: 13px;
+    color: var(--text-mid);
+    font-weight: 300;
+    padding: 4px 0;
+    font-style: italic;
+  }
+
+  /* CLOSING */
+  .closing-hero {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 56px 48px;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .closing-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.1);
+  }
+  .closing-hero-tag {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .closing-hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .closing-hero-quote {
+    font-size: 17px;
+    color: rgba(254,252,248,0.65);
+    max-width: 560px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .reflection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .reflection-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .reflection-num {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--gold-pale);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .reflection-q {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.6;
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+
+  /* BIB */
+  .bib-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+    align-items: start;
+  }
+  .bib-item:last-child { border-bottom: none; }
+  .bib-source {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    background: var(--navy);
+    color: var(--gold-light);
+    padding: 3px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    height: fit-content;
+  }
+  .bib-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.55;
+  }
+  .bib-text em { font-style: italic; }
+
+  /* HELPERS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .callout {
+    background: var(--gold-pale);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  .instructor-box {
+    background: var(--navy-light);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 16px 0;
+  }
+  .instructor-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .instructor-text {
+    font-size: 14px;
+    color: rgba(254,252,248,0.8);
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--navy);
+    margin: 32px 0 16px;
+  }
+  h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 20px 0 10px;
+  }
+  p { margin-bottom: 16px; font-weight: 300; color: var(--text-mid); }
+  ul, ol { padding-left: 20px; margin-bottom: 16px; }
+  li { font-size: 14px; color: var(--text-mid); font-weight: 300; margin-bottom: 6px; line-height: 1.6; }
+
+  @media (max-width: 700px) {
+    .cover { padding: 48px 24px 40px; }
+    .cover h1 { font-size: 36px; }
+    .nav { padding: 0 16px; }
+    .section { padding: 48px 20px; }
+    .section-header { flex-direction: column; gap: 8px; }
+    .section-number { font-size: 48px; }
+    .evolution-timeline { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: repeat(2,1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .reflection-grid { grid-template-columns: 1fr; }
+    .case-card { grid-template-columns: 1fr; }
+    .dynamic-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-tag">Escuela de Negocios · Diseño Instruccional</div>
+  <h1>Gestión de Personas<br>en la Era de la <em>Inteligencia Artificial</em></h1>
+  <p class="cover-subtitle">Propuesta pedagógica integral para líderes y profesionales de RRHH que enfrentan la transformación organizacional impulsada por IA.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="label">Modalidad</div><div class="value">Jornada completa — 5.5 horas</div></div>
+    <div class="cover-meta-item"><div class="label">Participantes</div><div class="value">20 alumnos</div></div>
+    <div class="cover-meta-item"><div class="label">Nivel</div><div class="value">MBA / Posgrado / Ejecutivo</div></div>
+    <div class="cover-meta-item"><div class="label">Formato</div><div class="value">Presencial · Alta participación</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#evolucion">Evolución RRHH</a>
+  <a href="#marco">Marco Conceptual</a>
+  <a href="#agenda">Agenda</a>
+  <a href="#dinamicas">Dinámicas</a>
+  <a href="#casos">Casos</a>
+  <a href="#cierre">Cierre</a>
+  <a href="#bib">Bibliografía</a>
+</nav>
+
+<!-- ====================================================== -->
+<!-- SECCIÓN 1: EVOLUCIÓN RRHH -->
+<!-- ====================================================== -->
+<section class="section" id="evolucion">
+  <div class="section-header">
+    <div class="section-number">01</div>
+    <div class="section-title-block">
+      <div class="section-tag">Marco histórico y conceptual</div>
+      <h2 class="section-title">Evolución del Rol de RRHH</h2>
+      <p class="section-desc">Del administrador de nómina al arquitecto de capacidades humanas: cómo se transformó la función en tres eras distintas.</p>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="evolution-timeline">
+    <div class="evo-phase">
+      <div class="evo-era">1950 – 1990</div>
+      <div class="evo-title">Administración de Personal</div>
+      <p class="evo-desc">RRHH como función operativa y burocrática: control de nómina, cumplimiento legal, relaciones laborales y administración de beneficios.</p>
+      <div class="evo-keywords">
+        <span class="evo-keyword">Nómina</span>
+        <span class="evo-keyword">Legajos</span>
+        <span class="evo-keyword">Convenios</span>
+        <span class="evo-keyword">Cumplimiento</span>
+      </div>
+    </div>
+    <div class="evo-phase">
+      <div class="evo-era">1990 – 2015</div>
+      <div class="evo-title">Socio Estratégico</div>
+      <p class="evo-desc">El modelo Dave Ulrich transforma RRHH en un aliado del negocio: gestión del talento, cultura, desarrollo organizacional y alineación estratégica.</p>
+      <div class="evo-keywords">
+        <span class="evo-keyword">Talento</span>
+        <span class="evo-keyword">Cultura</span>
+        <span class="evo-keyword">HRBP</span>
+        <span class="evo-keyword">Desempeño</span>
+      </div>
+    </div>
+    <div class="evo-phase active">
+      <div class="evo-era">2015 – Hoy</div>
+      <div class="evo-title">Arquitecto de Capacidades Humanas</div>
+      <p class="evo-desc">RRHH como diseñador del sistema humano-IA: habilita capacidades, orquesta la experiencia del empleado y lidera la transformación con datos e inteligencia artificial.</p>
+      <div class="evo-keywords">
+        <span class="evo-keyword">People Analytics</span>
+        <span class="evo-keyword">AI Augmented</span>
+        <span class="evo-keyword">Skills-Based</span>
+        <span class="evo-keyword">EX</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Idea clave para la clase:</strong> La IA no reemplaza a RRHH — la <em>obliga</em> a ser más humana. Las tareas transaccionales se automatizan; el juicio, la empatía y el diseño organizacional quedan en manos humanas. El desafío no es tecnológico: es de liderazgo, cultura y propósito.
+  </div>
+
+  <h3>Cómo cambian las dimensiones organizacionales</h3>
+  <div class="two-col">
+    <div>
+      <h4>Liderazgo</h4>
+      <p>De jerárquico y directivo a distribuido y habilitador. Los líderes del siglo XXI gestionan equipos híbridos, colaboran con sistemas de IA y toman decisiones data-driven sin perder el componente humano. Emergen el "humble leadership" (Schein & Schein) y el liderazgo adaptativo (Heifetz).</p>
+
+      <h4>Cultura</h4>
+      <p>La cultura se vuelve el diferenciador competitivo que la IA no puede copiar. Las organizaciones deben construir culturas de aprendizaje continuo, seguridad psicológica (Amy Edmondson) y experimentación. La cultura es el sistema operativo de la transformación.</p>
+
+      <h4>Talento y Skills</h4>
+      <p>El paradigma pasa del cargo (job-based) a las habilidades (skills-based). McKinsey y el WEF coinciden: las organizaciones que identifican y despliegan habilidades —no títulos— obtienen ventajas de productividad de hasta 30%.</p>
+
+      <h4>Aprendizaje</h4>
+      <p>De training puntual a aprendizaje continuo embebido en el flujo de trabajo. LinkedIn Learning, Degreed y los LXP (Learning Experience Platforms) personalizan el desarrollo con IA. El tiempo de vida de una habilidad técnica cayó de 5 años a 18 meses.</p>
+    </div>
+    <div>
+      <h4>Desempeño</h4>
+      <p>De la evaluación anual al feedback continuo. Empresas como Microsoft, Adobe y GE abandonaron los rankings forzados por modelos de "check-in" frecuentes, OKRs y conversaciones de desarrollo. La IA analiza datos de desempeño en tiempo real.</p>
+
+      <h4>Engagement</h4>
+      <p>El 23% de los empleados globales está engaged (Gallup State of the Global Workplace 2023). La IA puede detectar señales tempranas de disengagement mediante análisis de patrones de comunicación, productividad y bienestar. El engagement en la era IA requiere propósito, autonomía y conexión social.</p>
+
+      <h4>Toma de Decisiones</h4>
+      <p>People Analytics transforma decisiones antes intuitivas en evidencia-driven. Desde predicción de rotación hasta identificación de redes de influencia informal. El desafío: combinar datos con criterio humano y consideraciones éticas.</p>
+
+      <h4>Employee Experience (EX)</h4>
+      <p>Jacob Morgan (2017) y Deloitte definen EX como la intersección de cultura, tecnología y espacio físico. Con IA, la EX se personaliza: onboarding adaptativo, wellbeing predictivo, carreras no lineales guiadas por datos.</p>
+    </div>
+  </div>
+
+  <h3>Tendencias que redefinen la función</h3>
+  <div class="trend-grid">
+    <div class="trend-card">
+      <div class="trend-icon">⚡</div>
+      <div class="trend-name">AI-Augmented Workforce</div>
+      <div class="trend-def">Humanos que trabajan con IA como colaborador, no como herramienta. Requiere rediseño de roles y procesos.</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-icon">🎯</div>
+      <div class="trend-name">Skills-Based Organizations</div>
+      <div class="trend-def">Deloitte 2024: 93% de ejecutivos planea adoptar el modelo. Rompe silos de cargos para desplegar habilidades donde se necesitan.</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-icon">📊</div>
+      <div class="trend-name">People Analytics</div>
+      <div class="trend-def">Datos de personas para decisiones estratégicas. Predice rotación, identifica líderes emergentes, optimiza equipos.</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-icon">🏠</div>
+      <div class="trend-name">Trabajo Híbrido</div>
+      <div class="trend-def">La nueva normalidad requiere diseño deliberado de colaboración, cultura y espacios para cohesión sin presencialidad constante.</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-icon">🔄</div>
+      <div class="trend-name">Aprendizaje Continuo</div>
+      <div class="trend-def">Reskilling y upskilling como imperativo estratégico. WEF: 50% de empleados necesitarán reentrenamiento antes de 2025.</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-icon">💫</div>
+      <div class="trend-name">Employee Experience</div>
+      <div class="trend-def">Diseñar cada touchpoint del ciclo de vida del empleado como si fuera una experiencia de producto.</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-icon">🧭</div>
+      <div class="trend-name">Gestión del Cambio</div>
+      <div class="trend-def">ADKAR, Kotter y Prosci adquieren nueva relevancia: la adopción humana es el cuello de botella de toda transformación digital.</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-icon">🤝</div>
+      <div class="trend-name">Bienestar Integral</div>
+      <div class="trend-def">Wellbeing ya no es beneficio: es estrategia. Burnout, salud mental y propósito como variables de productividad y retención.</div>
+    </div>
+  </div>
+
+  <h3>Las habilidades humanas que la IA potencia y no puede reemplazar</h3>
+  <div class="skills-grid">
+    <div class="skill-pill">
+      <div class="skill-pill-name">Pensamiento Crítico</div>
+      <div class="skill-pill-note">Evaluar, cuestionar, decidir</div>
+    </div>
+    <div class="skill-pill">
+      <div class="skill-pill-name">Empatía</div>
+      <div class="skill-pill-note">Comprender lo no dicho</div>
+    </div>
+    <div class="skill-pill">
+      <div class="skill-pill-name">Creatividad</div>
+      <div class="skill-pill-note">Conectar lo no obvio</div>
+    </div>
+    <div class="skill-pill light">
+      <div class="skill-pill-name">Comunicación</div>
+      <div class="skill-pill-note">Contexto y matiz</div>
+    </div>
+    <div class="skill-pill light">
+      <div class="skill-pill-name">Adaptabilidad</div>
+      <div class="skill-pill-note">Navegar la ambigüedad</div>
+    </div>
+    <div class="skill-pill light">
+      <div class="skill-pill-name">Criterio Ético</div>
+      <div class="skill-pill-note">Juicio en dilemas</div>
+    </div>
+    <div class="skill-pill">
+      <div class="skill-pill-name">Colaboración</div>
+      <div class="skill-pill-note">Interdependencia humana</div>
+    </div>
+    <div class="skill-pill">
+      <div class="skill-pill-name">Liderazgo e Influencia</div>
+      <div class="skill-pill-note">Inspirar sin autoridad</div>
+    </div>
+  </div>
+  <p style="font-size:13px; color: var(--text-muted); margin-top: 8px;">WEF Future of Jobs 2023 · McKinsey Global Institute 2023 · Deloitte Human Capital Trends 2024</p>
+</section>
+
+<!-- ====================================================== -->
+<!-- SECCIÓN 2: MARCO CONCEPTUAL -->
+<!-- ====================================================== -->
+<section class="section" id="marco">
+  <div class="section-header">
+    <div class="section-number">02</div>
+    <div class="section-title-block">
+      <div class="section-tag">Fundamentos académicos y prácticos</div>
+      <h2 class="section-title">Marco Conceptual y Fuentes</h2>
+      <p class="section-desc">Sustento intelectual de nivel MBA: autores, modelos, consultoras y papers que fundamentan cada decisión pedagógica.</p>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">McKinsey Global Institute</span>
+      <div class="fw-title">El futuro del trabajo y la IA generativa</div>
+    </div>
+    <div class="fw-content">
+      <p>El informe <em>"The Economic Potential of Generative AI" (2023)</em> estima que la IA generativa podría automatizar entre 60–70% de las actividades que los trabajadores realizan actualmente. Pero el impacto no es destrucción de empleo: es <strong>transformación de roles</strong>. McKinsey identifica que 12 millones de personas deberán cambiar de ocupación antes de 2030 solo en EE.UU.</p>
+      <div class="fw-quote">"La IA no reemplaza al ser humano en su conjunto; reemplaza tareas. Y las tareas más resistentes a la automatización son aquellas que requieren juicio social complejo, creatividad no rutinaria y gestión de relaciones."</div>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">The Work Activity Framework</span>
+      <span class="fw-model-tag">Task vs. Job Decomposition</span>
+      <span class="fw-model-tag">Reskilling Imperatives</span>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">Dave Ulrich · RBL Group</span>
+      <div class="fw-title">Modelo de los 3 Roles y HR Competency Model</div>
+    </div>
+    <div class="fw-content">
+      <p>Dave Ulrich (University of Michigan) definió en 1997 el modelo de <em>Business Partner</em> que aún estructura la función. Su evolución reciente (2023) incorpora el rol de <strong>Architect of Human Capability</strong>: quien diseña el sistema completo de capacidades humanas para competir en el futuro.</p>
+      <div class="fw-quote">"HR professionals of the future must be architects of human capability — designing the organization's ability to learn, adapt, and lead."</div>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">Strategic Partner</span>
+      <span class="fw-model-tag">Employee Champion</span>
+      <span class="fw-model-tag">Change Agent</span>
+      <span class="fw-model-tag">Administrative Expert</span>
+      <span class="fw-model-tag">Capability Architect</span>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">World Economic Forum</span>
+      <div class="fw-title">Future of Jobs Report 2023 — The Skills Revolution</div>
+    </div>
+    <div class="fw-content">
+      <p>El WEF encuestó a 803 empresas en 27 industrias. Hallazgos centrales: 44% de las habilidades clave de los trabajadores cambiarán en los próximos 5 años. Las 10 habilidades más demandadas para 2027 incluyen pensamiento analítico, creative thinking, resilience, curiosidad y aprendizaje continuo.</p>
+      <p>El reskilling a escala es el desafío #1 de liderazgo. Las empresas que invierten en aprendizaje tienen 94% más retención (LinkedIn Workplace Learning Report).</p>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">Top 10 Skills 2027</span>
+      <span class="fw-model-tag">Jobs of Tomorrow</span>
+      <span class="fw-model-tag">Reskilling Revolution</span>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">Deloitte Human Capital</span>
+      <div class="fw-title">Human Capital Trends 2024 — The Boundaryless Organization</div>
+    </div>
+    <div class="fw-content">
+      <p>Deloitte identifica la "organización sin fronteras" como el paradigma emergente: equipos fluidos, habilidades que fluyen entre proyectos, y la función de RRHH como orquestadora del ecosistema humano. El concepto de <strong>superteams</strong> (humanos + IA trabajando juntos) es central.</p>
+      <div class="fw-quote">"The most important design question is no longer 'what jobs do we need?' but 'what work needs to be done, and who or what is best positioned to do it?'"</div>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">Skills-Based Organization</span>
+      <span class="fw-model-tag">Superteams</span>
+      <span class="fw-model-tag">Work Architecture</span>
+      <span class="fw-model-tag">Human Sustainability</span>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">Amy Edmondson · Harvard</span>
+      <div class="fw-title">Seguridad Psicológica y Teaming</div>
+    </div>
+    <div class="fw-content">
+      <p>Edmondson (HBS) demostró que la seguridad psicológica —la creencia de que uno puede hablar sin miedo a ser humillado— es el predictor #1 de desempeño de equipo (Proyecto Aristóteles, Google). En la era de la IA, donde el error y la experimentación son necesarios para aprender rápido, la seguridad psicológica es una ventaja competitiva.</p>
+      <div class="fw-quote">"In a world that requires more learning, more collaboration across boundaries, and more innovation, psychological safety is not a 'nice to have' — it's a strategic necessity."</div>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">Psychological Safety Scale</span>
+      <span class="fw-model-tag">Teaming</span>
+      <span class="fw-model-tag">Fearless Organization</span>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">Gallup</span>
+      <div class="fw-title">State of the Global Workplace 2023 — El Costo del Disengagement</div>
+    </div>
+    <div class="fw-content">
+      <p>Solo el 23% de los empleados globales está engaged. El costo del disengagement representa el 9% del PIB mundial ($8.8 trillones). Los managers explican el 70% de la varianza en engagement de equipo. En la era de la IA, el liderazgo cercano y el propósito son los antídotos al distanciamiento.</p>
+      <p>Gallup también identifica los 12 elementos del engagement (Q12) como predictores de productividad, rotación y rentabilidad.</p>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">Q12 Framework</span>
+      <span class="fw-model-tag">Manager Development</span>
+      <span class="fw-model-tag">Strengths-Based Leadership</span>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">MIT Sloan · Josh Bersin</span>
+      <div class="fw-title">People Analytics y el HR Stack del Futuro</div>
+    </div>
+    <div class="fw-content">
+      <p>MIT Sloan Management Review publicó extensamente sobre People Analytics como competencia estratégica. Josh Bersin (Institute) mapea el HR Technology Stack: desde ATS e HRIS hasta plataformas de IA para predicción de rotación, análisis de redes organizacionales (ONA) y diseño de experiencias.</p>
+      <p>El modelo de <strong>Organizational Network Analysis</strong> revela quién realmente conecta el conocimiento, independientemente del organigrama formal.</p>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">Predictive Analytics</span>
+      <span class="fw-model-tag">ONA — Org Network Analysis</span>
+      <span class="fw-model-tag">HR Tech Stack</span>
+      <span class="fw-model-tag">Talent Intelligence</span>
+    </div>
+  </div>
+
+  <div class="framework-block">
+    <div class="framework-block-header">
+      <span class="fw-source-badge">SHRM · Boudreau & Ramstad</span>
+      <div class="fw-title">Beyond HR — El Marco de Talentship</div>
+    </div>
+    <div class="fw-content">
+      <p>Boudreau y Ramstad (USC) proponen <em>talentship</em>: una disciplina de toma de decisiones sobre talento tan rigurosa como las finanzas. Su modelo ACE (Alignment, Capabilities, Engagement) conecta decisiones de personas con resultados estratégicos medibles.</p>
+      <p>SHRM agrega los marcos de Competencias 2025: Business Acumen, Ethical Practice, Consultation, y Communication como pilares del profesional de RRHH futuro.</p>
+    </div>
+    <div class="fw-models">
+      <span class="fw-model-tag">Talentship</span>
+      <span class="fw-model-tag">ACE Model</span>
+      <span class="fw-model-tag">SHRM Competency Model</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- SECCIÓN 3: AGENDA -->
+<!-- ====================================================== -->
+<section class="section" id="agenda">
+  <div class="section-header">
+    <div class="section-number">03</div>
+    <div class="section-title-block">
+      <div class="section-tag">Diseño pedagógico completo</div>
+      <h2 class="section-title">Agenda de la Jornada</h2>
+      <p class="section-desc">5 horas 30 minutos de aprendizaje activo, diseñados para alternar entre marcos conceptuales, dinámicas experienciales y reflexión estratégica.</p>
+    </div>
+  </div>
+
+  <div class="agenda-timeline">
+
+    <div class="agenda-block highlight">
+      <div class="agenda-time">08:30 — 09:00 · 30 min</div>
+      <div class="agenda-item-title">Apertura: El Momento que Estamos Viviendo</div>
+      <div class="agenda-item-desc">Activación del grupo con pregunta provocadora, contexto de la jornada y contrato de aprendizaje. El docente presenta 3 imágenes de transformación disruptiva y pregunta: "¿Qué tiene en común esto con lo que pasa en sus organizaciones?"</div>
+      <div class="agenda-meta">
+        <span class="agenda-meta-item">🎯 Activar curiosidad y apertura</span>
+        <span class="agenda-meta-item">📋 Contrato grupal</span>
+        <span class="agenda-meta-item">💬 Plenario</span>
+      </div>
+      <div class="instructor-box">
+        <div class="instructor-label">Instrucción para el docente</div>
+        <div class="instructor-text">Comenzar con la pregunta: <em>"¿Cuál fue la última decisión de personas que tomaste basada en datos, y cuál fue la última que tomaste basada en intuición? ¿Cuál resultó mejor?"</em> — Pedir 3-4 voluntarios. Genera tensión productiva de inmediato.</div>
+      </div>
+    </div>
+
+    <div class="agenda-block">
+      <div class="agenda-time">09:00 — 10:00 · 60 min</div>
+      <div class="agenda-item-title">Bloque 1 — La Evolución de RRHH y el Rol en la Era IA</div>
+      <div class="agenda-item-desc">Marco conceptual exposición interactiva. Línea de tiempo de la función, modelo de Ulrich actualizado, tendencias WEF/McKinsey. Ejercicio de auto-diagnóstico: ¿En qué fase está tu organización y qué estás priorizando tú como profesional?</div>
+      <div class="agenda-meta">
+        <span class="agenda-meta-item">🎓 Marco teórico</span>
+        <span class="agenda-meta-item">💡 Auto-diagnóstico</span>
+        <span class="agenda-meta-item">⏱ 20 min exposición + 20 min ejercicio + 20 min debate</span>
+      </div>
+      <div class="callout">
+        <strong>Preguntas disparadoras:</strong> "¿Qué porcentaje de tu trabajo como líder/HR podría hacer hoy una IA?" · "¿Qué decisiones de personas tomas que NO podrían basarse en datos?" · "¿Qué habilidad tuya se vuelve más valiosa —no menos— con IA?"
+      </div>
+    </div>
+
+    <div class="agenda-block">
+      <div class="agenda-time">10:00 — 11:30 · 90 min</div>
+      <div class="agenda-item-title">Bloque 2 — Dinámica Experiencial #1: "El Comité IA"</div>
+      <div class="agenda-item-desc">Simulación de toma de decisiones críticas sobre personas con datos de IA. Grupos de 4-5 personas deben decidir sobre reducción de personal, ascensos y cultura usando reportes de people analytics. Ver detalle completo en Sección Dinámicas.</div>
+      <div class="agenda-meta">
+        <span class="agenda-meta-item">🎭 Role play</span>
+        <span class="agenda-meta-item">👥 4 grupos de 5</span>
+        <span class="agenda-meta-item">🔍 Debrief 30 min</span>
+      </div>
+    </div>
+
+    <div class="agenda-block break">
+      <div class="agenda-time">11:30 — 11:45 · 15 min</div>
+      <div class="agenda-item-title">Pausa — Networking Estructurado</div>
+      <div class="agenda-item-desc">No es una pausa libre. Consigna: hablar con alguien que no conocés y compartir una tensión real que estás viviendo entre tecnología y gestión de personas.</div>
+    </div>
+
+    <div class="agenda-block">
+      <div class="agenda-time">11:45 — 13:00 · 75 min</div>
+      <div class="agenda-item-title">Bloque 3 — Liderazgo, Cultura y Equipos Híbridos en la Era IA</div>
+      <div class="agenda-item-desc">Seguridad psicológica, liderazgo adaptativo, gestión de la incertidumbre. Caso de estudio sobre cultura organizacional + IA. Dinámica #2: "El Equipo Fracturado" — resolución de conflicto en equipo híbrido con tensión humano-IA.</div>
+      <div class="agenda-meta">
+        <span class="agenda-meta-item">🎯 Habilidades de liderazgo</span>
+        <span class="agenda-meta-item">💬 Caso + Dinámica</span>
+        <span class="agenda-meta-item">🏆 Alta participación</span>
+      </div>
+    </div>
+
+    <div class="agenda-block break">
+      <div class="agenda-time">13:00 — 14:00 · 60 min</div>
+      <div class="agenda-item-title">Almuerzo</div>
+      <div class="agenda-item-desc">Almuerzo de trabajo con consigna opcional: reflexionar sobre el dilema ético del caso que se presentará en el bloque siguiente.</div>
+    </div>
+
+    <div class="agenda-block">
+      <div class="agenda-time">14:00 — 15:15 · 75 min</div>
+      <div class="agenda-item-title">Bloque 4 — Dilemas Éticos de la IA en RRHH</div>
+      <div class="agenda-item-desc">Sesgos algorítmicos, vigilancia laboral, reskilling forzado, privacidad. Debate estructurado Oxford-style: "La IA en RRHH hace a las organizaciones más justas — o más injustas". Dinámica #3: "El Tribunal Ético".</div>
+      <div class="agenda-meta">
+        <span class="agenda-meta-item">⚖️ Ética y dilemas</span>
+        <span class="agenda-meta-item">🗣 Debate estructurado</span>
+        <span class="agenda-meta-item">👥 Full grupo</span>
+      </div>
+    </div>
+
+    <div class="agenda-block">
+      <div class="agenda-time">15:15 — 16:15 · 60 min</div>
+      <div class="agenda-item-title">Bloque 5 — Diseño del Futuro: Skills, Analytics y EX</div>
+      <div class="agenda-item-desc">Taller de diseño estratégico. Cada grupo recibe una organización ficticia y debe diseñar su estrategia de RRHH para 2026-2028: qué capacidades construir, cómo medir, qué IA incorporar y cómo gestionar el cambio cultural.</div>
+      <div class="agenda-meta">
+        <span class="agenda-meta-item">🏗 Design thinking</span>
+        <span class="agenda-meta-item">📊 Entregable visual</span>
+        <span class="agenda-meta-item">🎨 Presentación 5 min / grupo</span>
+      </div>
+    </div>
+
+    <div class="agenda-block highlight">
+      <div class="agenda-time">16:15 — 17:00 · 45 min</div>
+      <div class="agenda-item-title">Cierre: "La Carta al Futuro" + Takeaway Final</div>
+      <div class="agenda-item-desc">Actividad de cierre de alto impacto emocional e intelectual. Cada participante escribe una carta a sí mismo como líder en 2027. Compartición selectiva, síntesis del docente y call to action memorable.</div>
+      <div class="agenda-meta">
+        <span class="agenda-meta-item">🌟 Alto impacto emocional</span>
+        <span class="agenda-meta-item">✍️ Individual + plenario</span>
+        <span class="agenda-meta-item">🎯 Takeaway memorable</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- SECCIÓN 4: DINÁMICAS -->
+<!-- ====================================================== -->
+<section class="section" id="dinamicas">
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <div class="section-title-block">
+      <div class="section-tag">Aprendizaje experiencial profundo</div>
+      <h2 class="section-title">Dinámicas Grupales y Ejercicios Experienciales</h2>
+      <p class="section-desc">Cinco dinámicas de alto impacto diseñadas para 20 participantes, que activan habilidades blandas críticas en entornos complejos y con tensión IA-humano.</p>
+    </div>
+  </div>
+
+  <!-- DINÁMICA 1 -->
+  <div class="dynamic-card">
+    <div class="dynamic-header">
+      <div class="dynamic-num">01</div>
+      <div class="dynamic-header-content">
+        <div class="dynamic-type">Simulación · Toma de decisiones</div>
+        <div class="dynamic-title">"El Comité de IA" — Decisiones de personas con algoritmos</div>
+        <div class="dynamic-chips">
+          <span class="dynamic-chip">90 minutos</span>
+          <span class="dynamic-chip">4 grupos de 5</span>
+          <span class="dynamic-chip">Pensamiento crítico</span>
+          <span class="dynamic-chip">Criterio ético</span>
+        </div>
+      </div>
+    </div>
+    <div class="dynamic-body">
+      <div class="dynamic-obj">
+        <strong>Objetivo:</strong> Que los participantes experimenten la tensión entre los datos que arroja un sistema de IA y el juicio humano en decisiones de alto impacto sobre personas, desarrollando criterio ético y habilidades de decisión compleja.
+      </div>
+
+      <h4>Materiales necesarios</h4>
+      <p>Fichas de "Reporte de People Analytics" (una por grupo, diferente para cada uno), matriz de decisión impresa, tarjetas de rol, timer visible.</p>
+
+      <h4>Instrucciones paso a paso</h4>
+      <ol class="dynamic-step-list">
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Setup (10 min):</strong> Dividir en 4 grupos de 5. Cada grupo recibe el mismo caso base: "TechCorp está reestructurando su equipo de 50 personas". Se les entrega un Reporte de People Analytics con scores de desempeño, riesgo de rotación, red de influencia, bienestar y potencial.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Ronda 1 — Solo datos (15 min):</strong> Los grupos deben tomar tres decisiones SOLO basados en el reporte de IA: ¿A quién ascender? ¿Quién lidera el nuevo proyecto? ¿Con quién no renovar contrato? Deben justificar cada decisión con datos del reporte.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Revelación (5 min):</strong> El docente entrega tarjetas de "información no capturada por el algoritmo": contexto personal de cada persona del equipo (duelo familiar, mentoreo de otros, proyecto invisible, sesgo del evaluador). Cambia todo.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Ronda 2 — Datos + contexto humano (15 min):</strong> Los grupos revisan sus decisiones. ¿Cambian? ¿Por qué? ¿Cómo ponderan los datos vs. el contexto? Documentan su proceso decisorio.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Presentación cruzada (15 min):</strong> Cada grupo presenta sus decisiones finales. Se generan diferencias entre grupos con los mismos datos — esto es el corazón del debrief.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Debrief y síntesis (30 min):</strong> Facilitación en plenario con las preguntas de cierre.</div></li>
+      </ol>
+
+      <div class="dynamic-debrief">
+        <div class="dynamic-debrief-label">Preguntas de debrief</div>
+        <ul>
+          <li>¿Qué se sintió tomar una decisión sobre personas solo con datos? ¿Qué incomodidad apareció?</li>
+          <li>¿El algoritmo fue justo? ¿Puede ser un algoritmo justo?</li>
+          <li>¿Qué información humana nunca podrá capturar un sistema de IA?</li>
+          <li>¿Cómo cambia tu responsabilidad como líder cuando hay IA en la cadena de decisión?</li>
+          <li>¿Qué deben saber los empleados sobre cómo se usan sus datos?</li>
+        </ul>
+      </div>
+
+      <div class="dynamic-learnings">
+        <span class="dynamic-learning-tag">Criterio ético en IA</span>
+        <span class="dynamic-learning-tag">Toma de decisiones compleja</span>
+        <span class="dynamic-learning-tag">Pensamiento crítico ante datos</span>
+        <span class="dynamic-learning-tag">Sesgo algorítmico</span>
+        <span class="dynamic-learning-tag">Responsabilidad de liderazgo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DINÁMICA 2 -->
+  <div class="dynamic-card">
+    <div class="dynamic-header">
+      <div class="dynamic-num">02</div>
+      <div class="dynamic-header-content">
+        <div class="dynamic-type">Role Play · Resolución de conflicto</div>
+        <div class="dynamic-title">"El Equipo Fracturado" — Liderazgo en equipos híbridos con tensión humano-IA</div>
+        <div class="dynamic-chips">
+          <span class="dynamic-chip">75 minutos</span>
+          <span class="dynamic-chip">5 grupos de 4</span>
+          <span class="dynamic-chip">Liderazgo</span>
+          <span class="dynamic-chip">Empatía</span>
+          <span class="dynamic-chip">Comunicación</span>
+        </div>
+      </div>
+    </div>
+    <div class="dynamic-body">
+      <div class="dynamic-obj">
+        <strong>Objetivo:</strong> Desarrollar habilidades de liderazgo, empatía y comunicación en contextos de conflicto organizacional generado por la adopción de IA, gestión emocional ante el miedo y resistencia al cambio.
+      </div>
+
+      <h4>Escenario base</h4>
+      <p>Un equipo de 6 personas en una empresa de servicios financieros está fracturado. La empresa incorporó un sistema de IA que automatizó el 60% de las tareas del equipo. 2 personas abrazan el cambio, 2 temen por sus puestos, 1 rechaza activamente la IA y 1 sufre burnout por la sobrecarga de reentrenamiento. El líder debe reconducir el equipo.</p>
+
+      <ol class="dynamic-step-list">
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Asignación de roles (5 min):</strong> Cada grupo de 4 recibe tarjetas de rol con perfil de personaje, emociones predominantes y posición ante la IA. Los roles son: Líder del equipo, Entusiasta de IA, Resistente, y Empleado con miedo.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Lectura individual (5 min):</strong> Cada participante lee su rol sin compartirlo. Se mete en el personaje. El líder recibe además una "agenda oculta del CEO": reducir el equipo en 2 personas en 30 días.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Ronda 1 — Reunión de equipo (20 min):</strong> El líder conduce una reunión de equipo en vivo. El objetivo es "alinear al equipo sobre la nueva realidad tecnológica". Los otros tres juegan sus roles con intensidad creciente. Los observadores (docente + 1 alumno por grupo) toman notas sobre habilidades de liderazgo observadas.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Timeout + coaching (5 min):</strong> Pausa. Los observadores dan feedback rápido (2 cosas que funcionaron, 1 para mejorar). El líder puede pedir asesoramiento a su grupo sobre cómo proceder.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Ronda 2 — Conversación 1:1 (10 min):</strong> El líder elige al personaje más resistente y conduce una conversación 1:1 para comprender su resistencia real y acordar un camino. El grupo observa en silencio.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Rotación de liderazgo (10 min):</strong> Otro participante toma el rol de líder y debe comunicar la difícil noticia de la reducción de equipo de manera humana y honesta.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Debrief plenario (20 min):</strong> Reflexión en grupo total.</div></li>
+      </ol>
+
+      <div class="dynamic-debrief">
+        <div class="dynamic-debrief-label">Preguntas de debrief</div>
+        <ul>
+          <li>¿Qué fue lo más difícil del rol de líder? ¿Qué sintieron desde cada personaje?</li>
+          <li>¿Qué habilidades de comunicación resultaron más efectivas para conectar con la resistencia?</li>
+          <li>¿Cómo se gestiona la honestidad cuando hay información que no se puede compartir?</li>
+          <li>¿Qué responsabilidad tiene el líder cuando la IA desplaza a personas de su equipo?</li>
+          <li>¿Cómo se mantiene la confianza del equipo en momentos de incertidumbre tecnológica?</li>
+        </ul>
+      </div>
+
+      <div class="dynamic-learnings">
+        <span class="dynamic-learning-tag">Liderazgo en incertidumbre</span>
+        <span class="dynamic-learning-tag">Gestión emocional</span>
+        <span class="dynamic-learning-tag">Conversaciones difíciles</span>
+        <span class="dynamic-learning-tag">Comunicación empática</span>
+        <span class="dynamic-learning-tag">Resistencia al cambio</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DINÁMICA 3 -->
+  <div class="dynamic-card">
+    <div class="dynamic-header">
+      <div class="dynamic-num">03</div>
+      <div class="dynamic-header-content">
+        <div class="dynamic-type">Debate estructurado · Ética</div>
+        <div class="dynamic-title">"El Tribunal Ético" — IA y justicia organizacional</div>
+        <div class="dynamic-chips">
+          <span class="dynamic-chip">60 minutos</span>
+          <span class="dynamic-chip">2 equipos + Jurado</span>
+          <span class="dynamic-chip">Pensamiento crítico</span>
+          <span class="dynamic-chip">Argumentación</span>
+          <span class="dynamic-chip">Ética</span>
+        </div>
+      </div>
+    </div>
+    <div class="dynamic-body">
+      <div class="dynamic-obj">
+        <strong>Objetivo:</strong> Desarrollar pensamiento crítico, argumentación estratégica y criterio ético ante dilemas complejos sobre el uso de IA en la gestión de personas.
+      </div>
+
+      <h4>Formato Oxford-Style con giro</h4>
+      <ol class="dynamic-step-list">
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Asignación aleatoria (3 min):</strong> Se dividen 20 personas en: Equipo A "Pro IA en RRHH" (7 personas), Equipo B "Críticos de IA en RRHH" (7 personas), Jurado (4 personas, incluye docente como árbitro + 3 alumnos). <em>La asignación es aleatoria, no por preferencia.</em> Deben defender la posición asignada aunque no la compartan.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Preparación (10 min):</strong> Cada equipo recibe un dossier con argumentos, datos y casos de su posición. Preparan su argumento central, ejemplos y anticipan contraargumentos. El jurado recibe criterios de evaluación: claridad, evidencia, contra-argumentación, impacto.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Apertura (6 min):</strong> 3 minutos cada equipo para presentar su argumento central. Sin interrupciones.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Debate cruzado (15 min):</strong> Rondas de pregunta y respuesta. Cualquier miembro puede hablar. El docente modera el tiempo y la profundidad. Habilita ataques directos a argumentos, no a personas.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Comodín "Cambio de bando" (5 min):</strong> Giro sorpresa: ambos equipos deben defender durante 2 minutos la posición contraria. Esto rompe la identificación con el argumento y forza la integración de perspectivas.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Veredicto del jurado (5 min):</strong> El jurado delibera 3 minutos y entrega veredicto con fundamento, no sobre quién "ganó" sino qué argumento fue más sólido.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Síntesis del docente (16 min):</strong> El docente integra los mejores argumentos de ambos lados, introduce conceptos como "IA responsable", "human-in-the-loop" y propone principios de uso ético de IA en RRHH.</div></li>
+      </ol>
+
+      <div class="dynamic-debrief">
+        <div class="dynamic-debrief-label">Preguntas de cierre</div>
+        <ul>
+          <li>¿Qué argumento contrario te resultó más difícil de rebatir? ¿Por qué?</li>
+          <li>¿Cambió tu opinión personal durante el ejercicio?</li>
+          <li>¿Qué principios mínimos debería respetar cualquier uso de IA en decisiones de personas?</li>
+          <li>¿Quién tiene la responsabilidad final cuando la IA se equivoca con una persona?</li>
+        </ul>
+      </div>
+
+      <div class="dynamic-learnings">
+        <span class="dynamic-learning-tag">Argumentación estratégica</span>
+        <span class="dynamic-learning-tag">Pensamiento ético</span>
+        <span class="dynamic-learning-tag">Perspectivas múltiples</span>
+        <span class="dynamic-learning-tag">Criterio en dilemas</span>
+        <span class="dynamic-learning-tag">Influencia y persuasión</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DINÁMICA 4 -->
+  <div class="dynamic-card">
+    <div class="dynamic-header">
+      <div class="dynamic-num">04</div>
+      <div class="dynamic-header-content">
+        <div class="dynamic-type">Taller colaborativo · Design thinking</div>
+        <div class="dynamic-title">"HR Lab 2027" — Diseño estratégico de la función de RRHH del futuro</div>
+        <div class="dynamic-chips">
+          <span class="dynamic-chip">60 minutos</span>
+          <span class="dynamic-chip">4 grupos de 5</span>
+          <span class="dynamic-chip">Creatividad</span>
+          <span class="dynamic-chip">Colaboración</span>
+          <span class="dynamic-chip">Estrategia</span>
+        </div>
+      </div>
+    </div>
+    <div class="dynamic-body">
+      <div class="dynamic-obj">
+        <strong>Objetivo:</strong> Aplicar los marcos conceptuales de la jornada en el diseño de una estrategia de RRHH para una organización real, desarrollando pensamiento estratégico, creatividad aplicada y capacidad de síntesis ejecutiva.
+      </div>
+
+      <ol class="dynamic-step-list">
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Contexto del cliente (5 min):</strong> Cada grupo recibe una "empresa cliente" diferente: startup de IA (150 personas, crecimiento 300% en 2 años), empresa industrial tradicional (2000 personas, digitalizándose), consultora global (800 personas, post-pandemia), ONG de salud (300 personas, recursos limitados).</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Diagnóstico AS-IS (10 min):</strong> El grupo mapea el estado actual de la función de RRHH de su empresa: ¿Dónde está en la escala de madurez? ¿Cuáles son sus 3 principales desafíos de personas? ¿Qué capacidades tiene hoy?</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Diseño TO-BE (20 min):</strong> Diseñan la estrategia RRHH 2025-2028 en 4 dimensiones: (1) Skills y talento: ¿Qué capacidades construir? ¿Cómo? (2) Tecnología e IA: ¿Qué incorporan y con qué criterios éticos? (3) Cultura y liderazgo: ¿Qué comportamientos habilitar? (4) People Analytics: ¿Qué medir y cómo?</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Business case rápido (10 min):</strong> Deben conectar su propuesta con impacto de negocio medible. ¿Qué indicadores de éxito definirían? ¿Cómo convencerían al CEO de invertir?</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Pitch ejecutivo (15 min — 3-4 min por grupo):</strong> Presentación de 3-4 minutos por grupo. Formato libre: pueden usar el pizarrón, cartelería, o hablar de pie. El resto del grupo actúa como Board de Directores y puede hacer preguntas duras.</div></li>
+      </ol>
+
+      <div class="dynamic-debrief">
+        <div class="dynamic-debrief-label">Preguntas de síntesis</div>
+        <ul>
+          <li>¿Qué tuvieron en común todas las estrategias, más allá del tipo de empresa?</li>
+          <li>¿Qué fue lo más difícil de diseñar: la tecnología o el cambio cultural?</li>
+          <li>¿Qué le dirían a un CEO que quiere resultados de IA en RRHH en 90 días?</li>
+        </ul>
+      </div>
+
+      <div class="dynamic-learnings">
+        <span class="dynamic-learning-tag">Pensamiento estratégico</span>
+        <span class="dynamic-learning-tag">Creatividad aplicada</span>
+        <span class="dynamic-learning-tag">Storytelling ejecutivo</span>
+        <span class="dynamic-learning-tag">Colaboración</span>
+        <span class="dynamic-learning-tag">Orientación a resultados</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DINÁMICA 5 -->
+  <div class="dynamic-card">
+    <div class="dynamic-header">
+      <div class="dynamic-num">05</div>
+      <div class="dynamic-header-content">
+        <div class="dynamic-type">Feedback · Habilidades blandas</div>
+        <div class="dynamic-title">"Espejo de Liderazgo" — Feedback real entre pares</div>
+        <div class="dynamic-chips">
+          <span class="dynamic-chip">45 minutos</span>
+          <span class="dynamic-chip">Tríos</span>
+          <span class="dynamic-chip">Autoconciencia</span>
+          <span class="dynamic-chip">Feedback</span>
+          <span class="dynamic-chip">Vulnerabilidad</span>
+        </div>
+      </div>
+    </div>
+    <div class="dynamic-body">
+      <div class="dynamic-obj">
+        <strong>Objetivo:</strong> Desarrollar autoconciencia de liderazgo y capacidad de dar y recibir feedback honesto, profundo y accionable entre pares. Una de las habilidades humanas más valiosas y que más resiste la IA.
+      </div>
+
+      <ol class="dynamic-step-list">
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Encuadre (5 min):</strong> El docente explica que la IA puede dar feedback basado en datos, pero no puede dar feedback basado en observación empática, en la experiencia vivida juntos durante la jornada. Lo que sigue solo es posible entre humanos.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Formación de tríos (2 min):</strong> Se forman tríos (6 grupos de 3, 2 de 4 si es necesario) con personas de diferentes grupos, para generar perspectivas frescas basadas en lo observado durante la jornada.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Ronda de observación (5 min por persona = 15-20 min):</strong> Cada persona recibe feedback de los otros dos usando el formato SBI: Situación (qué observé hoy) → Comportamiento (qué hiciste exactamente) → Impacto (cómo me afectó / qué generó). Turno rotativo. El receptor solo escucha, sin defenderse.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Elección del "superpoder" (5 min):</strong> Cada persona elige la fortaleza más mencionada por sus pares y formula una intención: "Mi superpoder que quiero amplificar en mi rol es..." y la comparte en voz alta dentro del trío.</div></li>
+        <li class="dynamic-step"><div class="dynamic-step-text"><strong>Cierre colectivo (5 min):</strong> En plenario, quien quiera puede compartir una sola frase sobre lo recibido. El docente cierra con reflexión sobre la importancia del feedback humano en la era de la IA.</div></li>
+      </ol>
+
+      <div class="dynamic-debrief">
+        <div class="dynamic-debrief-label">Reflexión final</div>
+        <ul>
+          <li>¿Qué fue más difícil: dar feedback honesto o recibirlo sin defenderse?</li>
+          <li>¿Qué te dijo el grupo hoy que una IA nunca podría haberte dicho?</li>
+          <li>¿Cómo cambia la dinámica de tu equipo si practican esto regularmente?</li>
+        </ul>
+      </div>
+
+      <div class="dynamic-learnings">
+        <span class="dynamic-learning-tag">Autoconciencia</span>
+        <span class="dynamic-learning-tag">Dar y recibir feedback</span>
+        <span class="dynamic-learning-tag">Fortalezas de liderazgo</span>
+        <span class="dynamic-learning-tag">Escucha activa</span>
+        <span class="dynamic-learning-tag">Vulnerabilidad productiva</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ====================================================== -->
+<!-- SECCIÓN 5: CASOS -->
+<!-- ====================================================== -->
+<section class="section" id="casos">
+  <div class="section-header">
+    <div class="section-number">05</div>
+    <div class="section-title-block">
+      <div class="section-tag">Aprendizaje basado en casos</div>
+      <h2 class="section-title">Casos y Dilemas para Discusión</h2>
+      <p class="section-desc">Casos reales y ficticios que obligan a los participantes a pensar, elegir y defender posiciones ante la complejidad de la IA en las organizaciones.</p>
+    </div>
+  </div>
+
+  <div class="case-card">
+    <span class="case-label real">Caso Real</span>
+    <div>
+      <div class="case-title">Amazon y el algoritmo de selección que discriminaba mujeres</div>
+      <p class="case-desc">Amazon desarrolló un sistema de IA para filtrar CVs que aprendió de los patrones de contratación históricos de la empresa, predominantemente masculinos. El sistema comenzó a penalizar palabras asociadas a mujeres (como "mujeres en tecnología") y a valorar términos más frecuentes en perfiles masculinos. Amazon descontinuó el proyecto en 2018, pero el caso es emblemático.</p>
+      <div class="case-questions">
+        <p>¿Cuál es la responsabilidad del equipo de RRHH cuando un algoritmo discrimina?</p>
+        <p>¿Cómo se audita éticamente un sistema de IA en selección?</p>
+        <p>¿Puede la IA ser más objetiva que los humanos, o simplemente reproduce sesgos a mayor escala?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card">
+    <span class="case-label etico">Dilema Ético</span>
+    <div>
+      <div class="case-title">El sistema de "bienestar predictivo" que sabe demasiado</div>
+      <p class="case-desc">Una empresa implementa una plataforma de bienestar que analiza patrones de comunicación interna (emails, chats, reuniones) para predecir riesgo de burnout. El sistema identifica a una gerente como "alto riesgo" antes de que ella misma lo sepa. El algoritmo sugiere intervención de RRHH. La empleada no sabe que está siendo monitoreada. Tiene una performance excelente.</p>
+      <div class="case-questions">
+        <p>¿Cuál es el límite entre cuidado y vigilancia? ¿Quién decide?</p>
+        <p>¿Se debería intervenir? ¿Cómo? ¿Con su consentimiento?</p>
+        <p>¿Qué pasa si el sistema se equivoca? ¿Quién asume las consecuencias?</p>
+        <p>¿Debería existir un "derecho a no ser monitoreado" en el trabajo?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card">
+    <span class="case-label debate">Debate</span>
+    <div>
+      <div class="case-title">Reskilling masivo o selección natural: el dilema de la transformación</div>
+      <p class="case-desc">Una empresa industrial con 2000 empleados implementa IA que automatiza el 40% de los puestos operativos. La dirección tiene dos opciones: (A) invertir 3 años y $5M en reskilling masivo de todos los empleados, con resultado incierto, o (B) "selección natural": no renovar contratos de quienes no puedan adaptarse e incorporar nuevos perfiles. La mayoría de los afectados son mayores de 50 años con 20+ años en la empresa.</p>
+      <div class="case-questions">
+        <p>¿Tiene la empresa obligación moral de reentrenar a sus empleados? ¿O solo contractual?</p>
+        <p>¿Es el reskilling masivo viable o una ilusión bien intencionada?</p>
+        <p>¿Qué papel debe jugar el Estado, la empresa y el individuo en este proceso?</p>
+        <p>¿Cómo se gestiona la dignidad de quienes no logran adaptarse?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card">
+    <span class="case-label dilema">Caso Ficticio</span>
+    <div>
+      <div class="case-title">"El Score de Cultura" — cuando la IA decide quién encaja</div>
+      <p class="case-desc">Una startup de tecnología implementa un "Culture Fit Score": un algoritmo que analiza interacciones en Slack, tiempo de respuesta, participación en canales voluntarios, y estilo de comunicación para generar un puntaje de alineación cultural. Los empleados con score bajo reciben "coaching cultural automatizado" y son excluidos de proyectos estratégicos. Un ingeniero excelente técnicamente tiene el score cultural más bajo del equipo. Es introvertido, trabaja de noche, no usa emojis.</p>
+      <div class="case-questions">
+        <p>¿La cultura puede (o debe) medirse algorítmicamente?</p>
+        <p>¿Qué sesgos codifica un "culture fit score"?</p>
+        <p>¿Cómo se diferencia alineación cultural de conformismo y exclusión de diversidad?</p>
+        <p>¿Qué harías como HRBP al descubrir este sistema?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card">
+    <span class="case-label etico">Dilema Ético</span>
+    <div>
+      <div class="case-title">El manager humano vs. el manager IA: ¿quién dirige mejor?</div>
+      <p class="case-desc">Una empresa de logística experimenta con un sistema de IA que gestiona directamente a equipos operativos: asigna tareas, da feedback en tiempo real, mide desempeño minuto a minuto y ajusta cargas de trabajo dinámicamente. Los resultados operativos mejoran 25%. El bienestar del equipo cae un 30%. Rotación aumenta al doble. El sistema no tiene "un mal día" ni favoritismos. Es perfectamente justo en el reparto de trabajo.</p>
+      <div class="case-questions">
+        <p>¿La eficiencia justifica el impacto en bienestar? ¿Quién define el trade-off?</p>
+        <p>¿Puede una IA "gestionar" personas o solo coordinarlas?</p>
+        <p>¿Qué necesidades humanas cubre el vínculo con un manager humano que un algoritmo no puede cubrir?</p>
+        <p>¿Hay contextos donde el "manager IA" sería más ético que el humano?</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ====================================================== -->
+<!-- SECCIÓN 6: CIERRE -->
+<!-- ====================================================== -->
+<section class="section" id="cierre">
+  <div class="section-header">
+    <div class="section-number">06</div>
+    <div class="section-title-block">
+      <div class="section-tag">Impacto y acción</div>
+      <h2 class="section-title">Cierre e Impacto Final</h2>
+      <p class="section-desc">Un cierre que conecta lo intelectual con lo personal, y lo individual con lo organizacional. Diseñado para quedar.</p>
+    </div>
+  </div>
+
+  <div class="closing-hero">
+    <div class="closing-hero-tag">Actividad de cierre · 45 minutos</div>
+    <div class="closing-hero-title">"La Carta al Futuro"</div>
+    <p class="closing-hero-quote">Cada participante escribe una carta a sí mismo como líder de personas en 2027. No un plan estratégico. Una carta humana, honesta, personal.</p>
+  </div>
+
+  <h3>Instrucciones para la actividad de cierre</h3>
+  <div class="instructor-box">
+    <div class="instructor-label">Instrucción para el docente</div>
+    <div class="instructor-text">Crear silencio intencional. Bajar la música o ambiente del espacio. Dar 15 minutos de escritura individual sin interrupciones. La carta tiene una consigna específica (ver abajo). No se corrige ni se evalúa. Es íntima y personal. Luego, quien quiera comparte un párrafo con el grupo. El docente cierra con su propio fragmento de "carta", generando reciprocidad y humanidad.</div>
+  </div>
+
+  <h4>Consigna de la carta</h4>
+  <div class="callout">
+    <p><strong>Querido/a [tu nombre] en 2027:</strong></p>
+    <p>Hoy es mayo de 2026. Acabo de pasar un día aprendiendo sobre lo que significa gestionar personas en la era de la inteligencia artificial. Estas son las 3 cosas que no quiero olvidar... Este es el tipo de líder que quiero seguir siendo, independientemente de la tecnología... El mayor miedo que tengo sobre este futuro es... Y la mayor oportunidad que veo para hacer algo que importe de verdad es...</p>
+  </div>
+
+  <h3>Preguntas de reflexión final para el plenario</h3>
+  <div class="reflection-grid">
+    <div class="reflection-card">
+      <div class="reflection-num">01</div>
+      <div class="reflection-q">¿Qué habilidad tuya —que hoy das por sentada— se va a volver mucho más valiosa en los próximos 3 años? ¿Y por qué?</div>
+    </div>
+    <div class="reflection-card">
+      <div class="reflection-num">02</div>
+      <div class="reflection-q">Si la IA puede hacer el 60% de tu trabajo actual, ¿cuál es el 40% que define quién sos como líder de personas?</div>
+    </div>
+    <div class="reflection-card">
+      <div class="reflection-num">03</div>
+      <div class="reflection-q">¿Cuál es la primera conversación que vas a tener de regreso en tu organización, a partir de lo que aprendiste hoy?</div>
+    </div>
+    <div class="reflection-card">
+      <div class="reflection-num">04</div>
+      <div class="reflection-q">¿Qué haría diferente tu organización si tratara a las personas con la misma sofisticación con la que diseña sus productos o servicios?</div>
+    </div>
+    <div class="reflection-card">
+      <div class="reflection-num">05</div>
+      <div class="reflection-q">¿En qué momento de la jornada sentiste que algo cambió en tu forma de ver el liderazgo o RRHH? ¿Qué fue?</div>
+    </div>
+    <div class="reflection-card">
+      <div class="reflection-num">06</div>
+      <div class="reflection-q">Si fuera 2030 y la IA ya hubiera transformado completamente tu industria, ¿qué decisiones de personas te arrepentirías de no haber tomado hoy?</div>
+    </div>
+  </div>
+
+  <h3>Takeaway final para el docente</h3>
+  <div class="closing-hero" style="padding: 40px 48px; text-align: left;">
+    <div class="closing-hero-tag">Mensaje de cierre · Para los participantes</div>
+    <div class="closing-hero-title" style="font-size: 28px;">"La IA es el espejo, no el reemplazo."</div>
+    <p class="closing-hero-quote" style="text-align: left;">La inteligencia artificial nos obliga a preguntarnos qué es lo que genuinamente humano aporta a las organizaciones. Y la respuesta no está en lo que sabemos, sino en cómo nos relacionamos. En cómo escuchamos. En cómo confiamos. En cómo inspiramos. En cómo tomamos decisiones cuando la información no alcanza. La era de la IA no es el fin del liderazgo humano — es su renacimiento. Los líderes que entiendan esto no serán reemplazados. Se volverán más necesarios que nunca.</p>
+  </div>
+
+  <div class="callout" style="margin-top: 32px;">
+    <strong>Acción concreta post-jornada:</strong> Cada participante recibe un "Compromiso de 30 días" — una tarjeta con 3 casillas para completar: (1) Una práctica de liderazgo que voy a incorporar, (2) Una conversación que voy a tener, (3) Un aprendizaje que voy a compartir con mi equipo. Se propone un follow-up grupal por WhatsApp o LinkedIn a los 30 días.
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- SECCIÓN 7: BIBLIOGRAFÍA -->
+<!-- ====================================================== -->
+<section class="section" id="bib">
+  <div class="section-header">
+    <div class="section-number">07</div>
+    <div class="section-title-block">
+      <div class="section-tag">Recursos académicos y profesionales</div>
+      <h2 class="section-title">Bibliografía Recomendada</h2>
+      <p class="section-desc">Fuentes primarias para profundizar. Combinación de académico riguroso, práctica de consultoría y pensamiento forward-looking.</p>
+    </div>
+  </div>
+
+  <div class="bib-item">
+    <span class="bib-source">LIBRO</span>
+    <div class="bib-text">Ulrich, D. & Dulebohn, J. (2015). <em>Are we there yet? What's next for HR?</em> — Human Resource Management Review. + Ulrich, D. (2023). <em>HR from the Outside In.</em> McGraw-Hill.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">LIBRO</span>
+    <div class="bib-text">Edmondson, A. (2018). <em>The Fearless Organization: Creating Psychological Safety in the Workplace for Learning, Innovation, and Growth.</em> Wiley.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">LIBRO</span>
+    <div class="bib-text">Morgan, J. (2017). <em>The Employee Experience Advantage.</em> Wiley. — Marco fundamental de EX.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">LIBRO</span>
+    <div class="bib-text">Boudreau, J. & Ramstad, P. (2007). <em>Beyond HR: The New Science of Human Capital.</em> Harvard Business School Press.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">LIBRO</span>
+    <div class="bib-text">Davenport, T. & Harris, J. (2007). <em>Competing on Analytics.</em> HBS Press. — Fundamento de People Analytics.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">LIBRO</span>
+    <div class="bib-text">Schein, E. & Schein, P. (2018). <em>Humble Leadership.</em> Berrett-Koehler. — Liderazgo del siglo XXI.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">REPORTE</span>
+    <div class="bib-text">McKinsey Global Institute. (2023). <em>The Economic Potential of Generative AI: The Next Productivity Frontier.</em> mckinsey.com</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">REPORTE</span>
+    <div class="bib-text">World Economic Forum. (2023). <em>Future of Jobs Report 2023.</em> weforum.org — Top 10 skills for 2027.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">REPORTE</span>
+    <div class="bib-text">Deloitte. (2024). <em>Global Human Capital Trends 2024: Thriving Beyond Boundaries.</em> deloitte.com</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">REPORTE</span>
+    <div class="bib-text">Gallup. (2023). <em>State of the Global Workplace 2023 Report.</em> gallup.com — Employee engagement global data.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">REPORTE</span>
+    <div class="bib-text">LinkedIn Learning. (2024). <em>Workplace Learning Report.</em> — Tendencias en aprendizaje organizacional.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">PAPER</span>
+    <div class="bib-text">Angrave, D. et al. (2016). <em>HR and analytics: why HR is set to fail the big data challenge.</em> Human Resource Management Journal.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">PAPER</span>
+    <div class="bib-text">Tambe, P., Cappelli, P. & Yakubovich, V. (2019). <em>Artificial Intelligence in Human Resources Management: Challenges and a Path Forward.</em> California Management Review.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">PAPER</span>
+    <div class="bib-text">Heifetz, R. & Laurie, D. (1997). <em>The Work of Leadership.</em> Harvard Business Review. — Liderazgo adaptativo.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">MIT SLOAN</span>
+    <div class="bib-text">Kiron, D. & Spindel, M. (2020). <em>Reworking the Revolution.</em> MIT Sloan Management Review + Deloitte Insights. — People analytics y el futuro del trabajo.</div>
+  </div>
+  <div class="bib-item">
+    <span class="bib-source">BERSIN</span>
+    <div class="bib-text">Bersin, J. (2024). <em>The Josh Bersin Company: HR Technology Market 2024.</em> joshbersin.com — HR Tech Stack y tendencias.</div>
+  </div>
+
+  <div style="margin-top: 40px; padding: 28px; background: var(--navy); border-radius: 12px;">
+    <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 16px;">Recursos complementarios para el docente</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div>
+        <div style="font-size: 13px; font-weight: 500; color: rgba(254,252,248,0.9); margin-bottom: 6px;">Podcasts recomendados</div>
+        <ul style="list-style: none; padding: 0;">
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); margin-bottom: 4px; font-weight: 300;">WorkLife with Adam Grant (TED)</li>
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); margin-bottom: 4px; font-weight: 300;">The Josh Bersin Podcast</li>
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); margin-bottom: 4px; font-weight: 300;">People Analytics Podcast (AIHR)</li>
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); font-weight: 300;">HBR IdeaCast</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size: 13px; font-weight: 500; color: rgba(254,252,248,0.9); margin-bottom: 6px;">Herramientas de IA en RRHH para demostrar</div>
+        <ul style="list-style: none; padding: 0;">
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); margin-bottom: 4px; font-weight: 300;">Workday People Analytics</li>
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); margin-bottom: 4px; font-weight: 300;">Visier — Workforce Intelligence</li>
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); margin-bottom: 4px; font-weight: 300;">Culture Amp — Engagement + AI</li>
+          <li style="font-size: 13px; color: rgba(254,252,248,0.6); font-weight: 300;">Eightfold AI — Talent Intelligence</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '-60px 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
